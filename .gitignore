@@ -1,3 +1,7 @@
+### additional custom settings
+# nestjs configs
+/src/config/*
+
 ############## nestjs default settings
 # compiled output
 /dist
