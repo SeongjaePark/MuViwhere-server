@@ -2,6 +2,9 @@
 # nestjs configs
 /src/config/*
 
+# docker
+docker-compose.yml
+
 ############## nestjs default settings
 # compiled output
 /dist
