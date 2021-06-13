@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -13,5 +13,27 @@ export class UsersService {
 
   public async findOne(id: number) {
     return await this.usersRepository.findOne({ id: id });
+  }
+
+  public async create(createUserDto: CreateUserDto) {
+    if (createUserDto.password !== createUserDto.passwordConfirmation) {
+      throw new BadRequestException(['Passwords are not identical']);
+    }
+
+    const existingUser = await this.usersRepository.findOne({
+      email: createUserDto.email,
+    });
+
+    if (existingUser) {
+      throw new BadRequestException(['email is already taken']);
+    }
+
+    const user = new User();
+    user.email = createUserDto.email;
+    user.password = createUserDto.password;
+
+    let { password, ...userInfo } = await this.usersRepository.save(user);
+
+    return userInfo;
   }
 }
