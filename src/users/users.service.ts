@@ -1,15 +1,22 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AuthService } from 'src/auth/auth.service';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entity/user.entity';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
   ) {}
 
   public async findOne(id: number) {
@@ -31,7 +38,7 @@ export class UsersService {
 
     const user = new User();
     user.email = createUserDto.email;
-    user.password = await bcrypt.hash(createUserDto.password, 10);
+    user.password = await this.authService.hashPassword(createUserDto.password);
 
     let { password, ...userInfo } = await this.usersRepository.save(user);
 
