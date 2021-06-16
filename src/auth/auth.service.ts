@@ -4,6 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { User } from 'src/users/entity/user.entity';
@@ -19,6 +20,7 @@ export class AuthService {
     private readonly usersRepository: Repository<User>,
     @Inject(forwardRef(() => UsersService))
     private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
   ) {}
 
   public async validateUser(email: string, password: string): Promise<any> {
@@ -33,6 +35,11 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  public login(user: User) {
+    const payload = { email: user.email, sub: user.id };
+    return { access_token: this.jwtService.sign(payload) };
   }
 
   public async hashPassword(password: string): Promise<string> {

@@ -6,12 +6,21 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { LocalStrategy } from './passport/local.strategy';
 import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
     forwardRef(() => UsersModule),
     TypeOrmModule.forFeature([User]),
     PassportModule,
+    JwtModule.registerAsync({
+      useFactory: () => ({
+        secret: process.env.AUTH_SECRET,
+        signOptions: {
+          expiresIn: '3h',
+        },
+      }),
+    }),
   ],
   providers: [AuthService, LocalStrategy],
   controllers: [AuthController],
