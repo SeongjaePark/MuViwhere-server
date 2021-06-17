@@ -40,8 +40,6 @@ export class UsersService {
     user.email = createUserDto.email;
     user.password = await this.authService.hashPassword(createUserDto.password);
 
-    let { password, ...userInfo } = await this.usersRepository.save(user);
-
-    return userInfo;
+    return await this.usersRepository.save(user);
   }
 }
