@@ -1,0 +1,32 @@
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateArtistDto } from './dto/create-artist.dto';
+import { Artist } from './entity/artist.entity';
+
+@Injectable()
+export class ArtistsService {
+  constructor(
+    @InjectRepository(Artist)
+    private readonly artistsRepository: Repository<Artist>,
+  ) {}
+
+  public async create(createArtistDto: CreateArtistDto) {
+    const existingArtist = await this.artistsRepository.findOne({
+      where: {
+        name: createArtistDto.name,
+        debutDate: createArtistDto.debutDate,
+      },
+    });
+
+    if (existingArtist) {
+      throw new BadRequestException(['The artist is already registered']);
+    }
+
+    const artist = new Artist();
+    artist.name = createArtistDto.name;
+    artist.debutDate = createArtistDto.debutDate;
+
+    return await this.artistsRepository.save(artist);
+  }
+}
