@@ -15,6 +15,10 @@ export class ArtistsService {
     return await this.artistsRepository.find();
   }
 
+  public async findOneById(id: number): Promise<Artist> {
+    return await this.artistsRepository.findOneOrFail(id);
+  }
+
   public async create(createArtistDto: CreateArtistDto) {
     const existingArtist = await this.artistsRepository.findOne({
       where: {
