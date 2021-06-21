@@ -11,6 +11,10 @@ export class ArtistsService {
     private readonly artistsRepository: Repository<Artist>,
   ) {}
 
+  public async findAll(): Promise<Artist[]> {
+    return await this.artistsRepository.find();
+  }
+
   public async create(createArtistDto: CreateArtistDto) {
     const existingArtist = await this.artistsRepository.findOne({
       where: {
