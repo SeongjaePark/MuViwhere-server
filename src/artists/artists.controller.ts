@@ -5,6 +5,7 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
@@ -15,8 +16,13 @@ export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 
   @Get()
-  async findAll(): Promise<Artist[]> {
-    return await this.artistsService.findAll();
+  async find(@Query('name') name: string): Promise<Artist[] | Artist> {
+    try {
+      return name ? await this.artistsService.findOneByName(name) : await this.artistsService.findAll();
+    } catch (error) {
+      throw new NotFoundException(`Artist ${name} not found`);
+
+    }
   }
 
   @Get(':id')
