@@ -7,6 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import databaseConfig from './config/database.config';
 import { UsersModule } from './users/users.module';
 import { ArtistsModule } from './artists/artists.module';
+import { MusicVideosModule } from './music-videos/music-videos.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ArtistsModule } from './artists/artists.module';
     AuthModule,
     UsersModule,
     ArtistsModule,
+    MusicVideosModule,
   ],
   controllers: [AppController],
   providers: [AppService],
