@@ -14,7 +14,7 @@ export class MusicVideosService {
     private readonly artistsService: ArtistsService,
   ) {}
 
-  async create(@Body() createMusicVideoDto: CreateMusicVideoDto) {
+  async create(createMusicVideoDto: CreateMusicVideoDto) {
     const artist = await this.artistsService.findOneById(
       createMusicVideoDto.artistId,
     );
