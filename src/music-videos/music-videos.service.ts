@@ -1,6 +1,7 @@
 import { Body, forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArtistsService } from 'src/artists/artists.service';
+import { Artist } from 'src/artists/entity/artist.entity';
 import { Repository } from 'typeorm';
 import { CreateMusicVideoDto } from './dto/create-music-video.dto';
 import { MusicVideo } from './entity/music-video.entity';
@@ -13,6 +14,14 @@ export class MusicVideosService {
     @Inject(forwardRef(() => ArtistsService))
     private readonly artistsService: ArtistsService,
   ) {}
+
+  async findAllByArtistId(artistId: number) {
+    return await this.musicVideosRepository.find({
+      where: {
+        artist: artistId,
+      },
+    });
+  }
 
   async create(createMusicVideoDto: CreateMusicVideoDto) {
     const artist = await this.artistsService.findOneById(
