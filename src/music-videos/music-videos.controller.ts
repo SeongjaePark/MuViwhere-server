@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
+  HttpCode,
   NotFoundException,
+  Param,
   Post,
   Query,
 } from '@nestjs/common';
@@ -29,5 +32,16 @@ export class MusicVideosController {
     @Body() createMusicVideoDto: CreateMusicVideoDto,
   ): Promise<MusicVideo> {
     return await this.musicVideosService.create(createMusicVideoDto);
+  }
+
+  @HttpCode(204)
+  @Delete(':id')
+  async remove(@Param('id') id: number) {
+    const affected = await this.musicVideosService.remove(id);
+    if (affected === 1) {
+      return;
+    } else {
+      throw new NotFoundException();
+    }
   }
 }

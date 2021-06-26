@@ -32,4 +32,9 @@ export class MusicVideosService {
     musicVideo.name = createMusicVideoDto.name;
     return await this.musicVideosRepository.save(musicVideo);
   }
+
+  async remove(id: number) {
+    const result = await this.musicVideosRepository.delete(id);
+    return result.affected;
+  }
 }
