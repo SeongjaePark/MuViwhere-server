@@ -2,6 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateArtistDto } from './dto/create-artist.dto';
+import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './entity/artist.entity';
 
 @Injectable()
@@ -22,8 +23,9 @@ export class ArtistsService {
   public async findOneByName(name: string): Promise<Artist> {
     return await this.artistsRepository.findOneOrFail({
       where: {
-      name
-    }})
+        name,
+      },
+    });
   }
 
   public async create(createArtistDto: CreateArtistDto) {
@@ -43,5 +45,10 @@ export class ArtistsService {
     artist.debutDate = createArtistDto.debutDate;
 
     return await this.artistsRepository.save(artist);
+  }
+
+  public async udpate(id: number, input: UpdateArtistDto) {
+    const result = await this.artistsRepository.update(id, input);
+    return result.affected;
   }
 }
