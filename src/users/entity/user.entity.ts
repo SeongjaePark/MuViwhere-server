@@ -1,5 +1,5 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
@@ -10,6 +10,7 @@ export class User {
   @Exclude()
   password: string;
 
+  // @Index() // In MySQL, there's no way to set unique without index. So, no need to add @Index() decorator here
   @Column({ unique: true })
   email: string;
 }
